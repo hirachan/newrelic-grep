@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "nrgrep"
+version = "0.1.0"
+description = ""
+authors = ["HIRANO Yoshitaka <hirano@qualitia.co.jp>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+cdev-sentry = {git = "https://github.com/qualitia-cdev/cdev-sentry", branch = "master"}
+requests = "^2.28.2"
+types-requests = "^2.28.11.15"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+mypy = "^0.991"
+flake8 = "^6.0.0"
+autopep8 = "^2.0.1"
+boto3 = "^1.26.57"
+boto3-stubs = {extras = ["sts", "s3"], version = "^1.26.57"}
+icecream = "^2.1.3"
+
+[tool.poetry.scripts]
+nrgrep = 'nrgrep.cli_nrgrep:main'
+nrgrep-api = 'nrgrep.cli_nrgrep:main_api'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
