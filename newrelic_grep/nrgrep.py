@@ -14,7 +14,10 @@ ACCOUNT_ID = os.environ["NR_ACCOUNT_ID"]
 def _escape(value: str) -> str:
     return value.replace("'", "\\'").replace("%", "\\%")
 
-def query(pattern: str, since: Optional[str], until: Optional[str], verbose: bool = False, attributes: list[str] = [], conditions: list[str] = []) -> None:
+def _escape_rlike(value: str) -> str:
+    return value.replace("'", "\\'")
+
+def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] = None, conditions: list[str] = [], regex: bool = False) -> str:
     if not since:
         _since = "3 DAYS AGO"
     else:
@@ -26,7 +29,11 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
         "API-Key": API_KEY,
     }
 
-    query = f"SELECT * FROM Log WHERE message LIKE '%{_escape(pattern)}%'"
+    query = "SELECT * FROM Log WHERE message"
+    if regex:
+        query += f" RLIKE r'{_escape_rlike(pattern)}'"
+    else:
+        query += f" LIKE '%{_escape(pattern)}%'"
     for cond in conditions:
         key, val = cond.split(":")
         query += f" AND {key}='{_escape(val)}'"
@@ -35,6 +42,12 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
         until += "20000101000000"[len(until):]
         _until = datetime.datetime.strptime(until, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
         query += f" UNTIL {_until}"
+
+    return query
+
+
+def query(pattern: str, since: Optional[str], until: Optional[str], verbose: bool = False, attributes: list[str] = [], conditions: list[str] = [], regex: bool = False) -> None:
+    query = build_nrql(pattern, since, until, conditions, regex)
 
     params = {
         "query": """
