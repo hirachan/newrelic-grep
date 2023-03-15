@@ -11,7 +11,7 @@ API_KEY = os.environ["NR_API_KEY"]
 ACCOUNT_ID = os.environ["NR_ACCOUNT_ID"]
 
 
-def query(pattern: str, since: Optional[str], until: Optional[str], verbose: bool = False) -> None:
+def query(pattern: str, since: Optional[str], until: Optional[str], verbose: bool = False, attributes: list[str] = []) -> None:
     if not since:
         _since = "3 DAYS AGO"
     else:
@@ -58,7 +58,7 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
         sys.exit(2)
 
     for log in res["data"]["actor"]["account"]["nrql"]["results"][::-1]:
-        if verbose:
-            print(log["hostname"], log["logtype"], log["message"])
+        for attribute in attributes:
+            print(log.get(attribute, ""), end=":")
         else:
             print(log["message"])
