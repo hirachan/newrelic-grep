@@ -155,3 +155,41 @@ def test_regex_single_quote()-> None:
     nrql = build_nrql(pattern, regex=True)
 
     assert nrql == expect
+
+
+
+def test_attribute_condition()-> None:
+    pattern = "pat"
+    attrs = ["hostname:myhost"]
+    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='myhost' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, conditions=attrs)
+
+    assert nrql == expect
+
+def test_attribute_two_conditions()-> None:
+    pattern = "pat"
+    attrs = ["hostname:myhost", "param:value"]
+    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='myhost' AND param='value' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, conditions=attrs)
+
+    assert nrql == expect
+
+def test_attribute_condition_percent()-> None:
+    pattern = "pat"
+    attrs = ["hostname:%%%"]
+    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='%%%' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, conditions=attrs)
+
+    assert nrql == expect
+
+def test_attribute_condition_single_quote()-> None:
+    pattern = "pat"
+    attrs = ["hostname:'''"]
+    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='\\'\\'\\'' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, conditions=attrs)
+
+    assert nrql == expect

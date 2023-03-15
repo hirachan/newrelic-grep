@@ -11,10 +11,10 @@ API_KEY = os.environ["NR_API_KEY"]
 ACCOUNT_ID = os.environ["NR_ACCOUNT_ID"]
 
 
-def _escape(value: str) -> str:
+def _escape_like(value: str) -> str:
     return value.replace("'", "\\'").replace("%", "\\%")
 
-def _escape_rlike(value: str) -> str:
+def _escape(value: str) -> str:
     return value.replace("'", "\\'")
 
 def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] = None, conditions: list[str] = [], regex: bool = False) -> str:
@@ -26,9 +26,9 @@ def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] =
 
     query = "SELECT * FROM Log WHERE message"
     if regex:
-        query += f" RLIKE r'{_escape_rlike(pattern)}'"
+        query += f" RLIKE r'{_escape(pattern)}'"
     else:
-        query += f" LIKE '%{_escape(pattern)}%'"
+        query += f" LIKE '%{_escape_like(pattern)}%'"
     for cond in conditions:
         key, val = cond.split(":")
         query += f" AND {key}='{_escape(val)}'"
