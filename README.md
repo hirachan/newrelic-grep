@@ -55,12 +55,12 @@ nrgrep -a hostname -a logtype 'Failed to write'
 ```
 
 **-q**
-    Query to attributes. Use 'Attribute Name:Value'.
+    Query to attributes. Format is `Attribute Name:Value`.
     You can use this option multiple times.
 
 Ex.
 ```
-ngrep -q hostname=myhost -q service=api 'Failed to write'
+ngrep -q hostname:myhost -q service=api 'Failed to write'
 ```
 
 **-v**
