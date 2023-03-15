@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "newrelic_grep"
-version = "0.1.2"
-description = "aaa"
+version = "1.0.0"
+description = "grep command for New Relic"
 authors = ["HIRANO Yoshitaka <yo@hirano.cc>"]
 homepage = "https://github.com/hirachan/newrelic-grep"
 readme = "README.md"
