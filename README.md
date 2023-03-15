@@ -40,6 +40,7 @@ nrgrep --since 20230301140000 --until 20230301150000 'Failed to write'
     Format is `YYYYmmddHHMMSS`.
     You can omit right part if you want.
     `2023030114` will be `20230301140000`
+    Default is 3 days ago.
 
 **--until**
     End time to be queried.
