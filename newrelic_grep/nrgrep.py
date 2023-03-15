@@ -29,8 +29,6 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
         _until = datetime.datetime.strptime(until, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
         query += f" UNTIL {_until}"
 
-    print(query)
-
     params = {
         "query": """
             {
@@ -46,7 +44,9 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
     }
 
     if verbose:
-        print(params["query"])
+        sys.stderr.write(f"NRQL: {query}\n")
+        sys.stderr.write("GraphQL:")
+        sys.stderr.write(params["query"])
 
     r = requests.post(URL, json.dumps(params), headers=headers)
 
@@ -54,6 +54,7 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
 
     if not res["data"]["actor"]["account"]["nrql"]:
         sys.stderr.write("\n".join([_["message"] for _ in res["errors"]]))
+        sys.stderr.write("\n")
         sys.exit(2)
 
     for log in res["data"]["actor"]["account"]["nrql"]["results"][::-1]:
