@@ -11,7 +11,10 @@ API_KEY = os.environ["NR_API_KEY"]
 ACCOUNT_ID = os.environ["NR_ACCOUNT_ID"]
 
 
-def query(pattern: str, since: Optional[str], until: Optional[str], verbose: bool = False, attributes: list[str] = []) -> None:
+def _escape(value: str) -> str:
+    return value.replace("'", "\\'").replace("%", "\\%")
+
+def query(pattern: str, since: Optional[str], until: Optional[str], verbose: bool = False, attributes: list[str] = [], conditions: list[str] = []) -> None:
     if not since:
         _since = "3 DAYS AGO"
     else:
@@ -23,7 +26,11 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
         "API-Key": API_KEY,
     }
 
-    query = f"SELECT * FROM Log WHERE message LIKE '%{pattern}%' LIMIT MAX SINCE {_since}"
+    query = f"SELECT * FROM Log WHERE message LIKE '%{_escape(pattern)}%'"
+    for cond in conditions:
+        key, val = cond.split(":")
+        query += f" AND {key}='{_escape(val)}'"
+    query += f" LIMIT MAX SINCE {_since}"
     if until:
         until += "20000101000000"[len(until):]
         _until = datetime.datetime.strptime(until, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
@@ -47,6 +54,7 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
         sys.stderr.write(f"NRQL: {query}\n")
         sys.stderr.write("GraphQL:")
         sys.stderr.write(params["query"])
+        sys.stderr.write("\n")
 
     r = requests.post(URL, json.dumps(params), headers=headers)
 

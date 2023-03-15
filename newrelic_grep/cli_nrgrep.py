@@ -21,6 +21,11 @@ def get_opt() -> argparse.Namespace:
                         type=str, metavar="ATTRIBUTE_NAME",
                         default=[],
                         help="Attribute to show, you can use this multiple times")
+    parser.add_argument("-q", dest="conds",
+                        action="append",
+                        type=str, metavar="ATTRIBUTE_NAME:VALUE",
+                        default=[],
+                        help="Attribute to show, you can use this multiple times")
     parser.add_argument("-v", dest="verbose",
                         action="store_true",
                         default=False,
@@ -33,7 +38,7 @@ def get_opt() -> argparse.Namespace:
 
 def main() -> int:
     args = get_opt()
-    nrgrep.query(args.pattern, args.since, args.until, args.verbose, attributes=args.attributes)
+    nrgrep.query(args.pattern, args.since, args.until, args.verbose, attributes=args.attributes, conditions=args.conds)
 
     return 0
 

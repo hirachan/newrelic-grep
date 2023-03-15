@@ -45,5 +45,23 @@ nrgrep --since 20230301140000 --until 20230301150000 'Failed to write'
     End time to be queried.
     Format is as same as `--since`
 
+**-a**
+    Show attibute before log message.
+    You can use this option multiple times.
+
+Ex.
+```
+nrgrep -a hostname -a logtype 'Failed to write'
+```
+
+**-q**
+    Query to attributes. Use 'Attribute Name:Value'.
+    You can use this option multiple times.
+
+Ex.
+```
+ngrep -q hostname=myhost -q service=api 'Failed to write'
+```
+
 **-v**
     Show queries to be sent.
