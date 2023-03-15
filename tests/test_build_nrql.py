@@ -1,4 +1,6 @@
-from newrelic_grep.nrgrep import build_nrql
+from newrelic_grep.nrgrep import build_nrql, get_timezone
+
+timezone = get_timezone()
 
 
 def test_1() -> None:
@@ -31,7 +33,7 @@ def test_single_quote() -> None:
 def test_since_full() -> None:
     pattern = "pat"
     since = "20230315123456"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:34:56 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:34:56 {timezone}'"
 
     nrql = build_nrql(pattern, since, None)
 
@@ -41,7 +43,7 @@ def test_since_full() -> None:
 def test_since_no_sec() -> None:
     pattern = "pat"
     since = "202303151234"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:34:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:34:00 {timezone}'"
 
     nrql = build_nrql(pattern, since, None)
 
@@ -51,7 +53,7 @@ def test_since_no_sec() -> None:
 def test_since_no_min() -> None:
     pattern = "pat"
     since = "2023031512"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, since, None)
 
@@ -61,7 +63,7 @@ def test_since_no_min() -> None:
 def test_since_no_hour() -> None:
     pattern = "pat"
     since = "20230315"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 00:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 00:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, since, None)
 
@@ -71,7 +73,7 @@ def test_since_no_hour() -> None:
 def test_since_no_day() -> None:
     pattern = "pat"
     since = "202303"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-01 00:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-01 00:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, since, None)
 
@@ -81,7 +83,7 @@ def test_since_no_day() -> None:
 def test_since_no_month() -> None:
     pattern = "pat"
     since = "2023"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-01-01 00:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-01-01 00:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, since, None)
 
@@ -91,7 +93,7 @@ def test_since_no_month() -> None:
 def test_until_full() -> None:
     pattern = "pat"
     until = "20230315123456"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:34:56 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:34:56 {timezone}'"
 
     nrql = build_nrql(pattern, None, until)
 
@@ -101,7 +103,7 @@ def test_until_full() -> None:
 def test_until_no_sec() -> None:
     pattern = "pat"
     until = "202303151234"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:34:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:34:00 {timezone}'"
 
     nrql = build_nrql(pattern, None, until)
 
@@ -111,7 +113,7 @@ def test_until_no_sec() -> None:
 def test_until_no_min() -> None:
     pattern = "pat"
     until = "2023031512"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, None, until)
 
@@ -121,7 +123,7 @@ def test_until_no_min() -> None:
 def test_until_no_hour() -> None:
     pattern = "pat"
     until = "20230315"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 00:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 00:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, None, until)
 
@@ -131,7 +133,7 @@ def test_until_no_hour() -> None:
 def test_until_no_day() -> None:
     pattern = "pat"
     until = "202303"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-01 00:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-01 00:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, None, until)
 
@@ -141,7 +143,7 @@ def test_until_no_day() -> None:
 def test_until_no_month() -> None:
     pattern = "pat"
     until = "2023"
-    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-01-01 00:00:00 +0900'"
+    expect = f"SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-01-01 00:00:00 {timezone}'"
 
     nrql = build_nrql(pattern, None, until)
 

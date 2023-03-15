@@ -4,6 +4,8 @@ import sys
 import os
 import json
 import datetime
+import time
+
 import requests
 
 URL = "https://api.newrelic.com/graphql"
@@ -19,6 +21,20 @@ def _escape(value: str) -> str:
     return value.replace("'", "\\'")
 
 
+def get_timezone() -> str:
+    offset = (time.timezone if (time.localtime().tm_isdst == 0) else time.altzone) * -1
+    if offset < 0:
+        offset = -offset
+        ret = "-"
+
+    else:
+        ret = "+"
+
+    ret += "%02d%02d" % (offset // 3600, (offset % 3600) / 60)
+
+    return ret
+
+
 def build_nrql(
         pattern: str,
         since: Optional[str] = None, until: Optional[str] = None,
@@ -26,12 +42,14 @@ def build_nrql(
         regex: bool = False,
         limit: int = 0
     ) -> str:
+    timezone = get_timezone()
+
     if not since:
         _since = "3 DAYS AGO"
     else:
         since += "20000101000000"[len(since):]
         _since = datetime.datetime.strptime(
-            since, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
+            since, "%Y%m%d%H%M%S").strftime(f"'%Y-%m-%d %H:%M:%S {timezone}'")
 
     _limit = "MAX" if limit == 0 else str(limit)
 
@@ -51,7 +69,7 @@ def build_nrql(
     if until:
         until += "20000101000000"[len(until):]
         _until = datetime.datetime.strptime(
-            until, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
+            until, "%Y%m%d%H%M%S").strftime(f"'%Y-%m-%d %H:%M:%S {timezone}'")
         query += f" UNTIL {_until}"
 
     return query
