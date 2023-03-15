@@ -24,11 +24,6 @@ def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] =
         since += "20000101000000"[len(since):]
         _since = datetime.datetime.strptime(since, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
 
-    headers = {
-        "Content-Type": "application/json",
-        "API-Key": API_KEY,
-    }
-
     query = "SELECT * FROM Log WHERE message"
     if regex:
         query += f" RLIKE r'{_escape_rlike(pattern)}'"
@@ -68,6 +63,11 @@ def query(pattern: str, since: Optional[str], until: Optional[str], verbose: boo
         sys.stderr.write("GraphQL:")
         sys.stderr.write(params["query"])
         sys.stderr.write("\n")
+
+    headers = {
+        "Content-Type": "application/json",
+        "API-Key": API_KEY,
+    }
 
     r = requests.post(URL, json.dumps(params), headers=headers)
 
