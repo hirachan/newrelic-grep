@@ -150,7 +150,7 @@ def test_until_no_month() -> None:
 
 def test_regex() -> None:
     pattern = "pat"
-    expect = "SELECT * FROM Log WHERE message RLIKE r'pat' LIMIT MAX SINCE 3 DAYS AGO"
+    expect = "SELECT * FROM Log WHERE message RLIKE r'.*pat.*' LIMIT MAX SINCE 3 DAYS AGO"
 
     nrql = build_nrql(pattern, regex=True)
 
@@ -159,7 +159,7 @@ def test_regex() -> None:
 
 def test_regex_percent() -> None:
     pattern = "%%%"
-    expect = "SELECT * FROM Log WHERE message RLIKE r'%%%' LIMIT MAX SINCE 3 DAYS AGO"
+    expect = "SELECT * FROM Log WHERE message RLIKE r'.*%%%.*' LIMIT MAX SINCE 3 DAYS AGO"
 
     nrql = build_nrql(pattern, regex=True)
 
@@ -168,7 +168,25 @@ def test_regex_percent() -> None:
 
 def test_regex_single_quote() -> None:
     pattern = "'''"
-    expect = "SELECT * FROM Log WHERE message RLIKE r'\\'\\'\\'' LIMIT MAX SINCE 3 DAYS AGO"
+    expect = "SELECT * FROM Log WHERE message RLIKE r'.*\\'\\'\\'.*' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, regex=True)
+
+    assert nrql == expect
+
+
+def test_regex_single_start() -> None:
+    pattern = "^pat"
+    expect = "SELECT * FROM Log WHERE message RLIKE r'^pat.*' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, regex=True)
+
+    assert nrql == expect
+
+
+def test_regex_single_end() -> None:
+    pattern = "pat$"
+    expect = "SELECT * FROM Log WHERE message RLIKE r'.*pat$' LIMIT MAX SINCE 3 DAYS AGO"
 
     nrql = build_nrql(pattern, regex=True)
 

@@ -37,6 +37,10 @@ def build_nrql(
 
     query = "SELECT * FROM Log WHERE message"
     if regex:
+        if not pattern.startswith("^"):
+            pattern = f".*{pattern}"
+        if not pattern.endswith("$"):
+            pattern = f"{pattern}.*"
         query += f" RLIKE r'{_escape(pattern)}'"
     else:
         query += f" LIKE '%{_escape_like(pattern)}%'"
