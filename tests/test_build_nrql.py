@@ -1,6 +1,7 @@
 from newrelic_grep.nrgrep import build_nrql
 
-def test_1()-> None:
+
+def test_1() -> None:
     pattern = "pat"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO"
 
@@ -8,7 +9,8 @@ def test_1()-> None:
 
     assert nrql == expect
 
-def test_percent()-> None:
+
+def test_percent() -> None:
     pattern = "%%%"
     expect = "SELECT * FROM Log WHERE message LIKE '%\\%\\%\\%%' LIMIT MAX SINCE 3 DAYS AGO"
 
@@ -16,7 +18,8 @@ def test_percent()-> None:
 
     assert nrql == expect
 
-def test_single_quote()-> None:
+
+def test_single_quote() -> None:
     pattern = "'''"
     expect = "SELECT * FROM Log WHERE message LIKE '%\\'\\'\\'%' LIMIT MAX SINCE 3 DAYS AGO"
 
@@ -24,7 +27,8 @@ def test_single_quote()-> None:
 
     assert nrql == expect
 
-def test_since_full()-> None:
+
+def test_since_full() -> None:
     pattern = "pat"
     since = "20230315123456"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:34:56 +0900'"
@@ -33,7 +37,8 @@ def test_since_full()-> None:
 
     assert nrql == expect
 
-def test_since_no_sec()-> None:
+
+def test_since_no_sec() -> None:
     pattern = "pat"
     since = "202303151234"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:34:00 +0900'"
@@ -42,7 +47,8 @@ def test_since_no_sec()-> None:
 
     assert nrql == expect
 
-def test_since_no_min()-> None:
+
+def test_since_no_min() -> None:
     pattern = "pat"
     since = "2023031512"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 12:00:00 +0900'"
@@ -51,7 +57,8 @@ def test_since_no_min()-> None:
 
     assert nrql == expect
 
-def test_since_no_hour()-> None:
+
+def test_since_no_hour() -> None:
     pattern = "pat"
     since = "20230315"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-15 00:00:00 +0900'"
@@ -60,7 +67,8 @@ def test_since_no_hour()-> None:
 
     assert nrql == expect
 
-def test_since_no_day()-> None:
+
+def test_since_no_day() -> None:
     pattern = "pat"
     since = "202303"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-03-01 00:00:00 +0900'"
@@ -69,7 +77,8 @@ def test_since_no_day()-> None:
 
     assert nrql == expect
 
-def test_since_no_month()-> None:
+
+def test_since_no_month() -> None:
     pattern = "pat"
     since = "2023"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE '2023-01-01 00:00:00 +0900'"
@@ -78,7 +87,8 @@ def test_since_no_month()-> None:
 
     assert nrql == expect
 
-def test_until_full()-> None:
+
+def test_until_full() -> None:
     pattern = "pat"
     until = "20230315123456"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:34:56 +0900'"
@@ -87,7 +97,8 @@ def test_until_full()-> None:
 
     assert nrql == expect
 
-def test_until_no_sec()-> None:
+
+def test_until_no_sec() -> None:
     pattern = "pat"
     until = "202303151234"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:34:00 +0900'"
@@ -96,7 +107,8 @@ def test_until_no_sec()-> None:
 
     assert nrql == expect
 
-def test_until_no_min()-> None:
+
+def test_until_no_min() -> None:
     pattern = "pat"
     until = "2023031512"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 12:00:00 +0900'"
@@ -105,7 +117,8 @@ def test_until_no_min()-> None:
 
     assert nrql == expect
 
-def test_until_no_hour()-> None:
+
+def test_until_no_hour() -> None:
     pattern = "pat"
     until = "20230315"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-15 00:00:00 +0900'"
@@ -114,7 +127,8 @@ def test_until_no_hour()-> None:
 
     assert nrql == expect
 
-def test_until_no_day()-> None:
+
+def test_until_no_day() -> None:
     pattern = "pat"
     until = "202303"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-03-01 00:00:00 +0900'"
@@ -123,7 +137,8 @@ def test_until_no_day()-> None:
 
     assert nrql == expect
 
-def test_until_no_month()-> None:
+
+def test_until_no_month() -> None:
     pattern = "pat"
     until = "2023"
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT MAX SINCE 3 DAYS AGO UNTIL '2023-01-01 00:00:00 +0900'"
@@ -132,7 +147,8 @@ def test_until_no_month()-> None:
 
     assert nrql == expect
 
-def test_regex()-> None:
+
+def test_regex() -> None:
     pattern = "pat"
     expect = "SELECT * FROM Log WHERE message RLIKE r'pat' LIMIT MAX SINCE 3 DAYS AGO"
 
@@ -140,7 +156,8 @@ def test_regex()-> None:
 
     assert nrql == expect
 
-def test_regex_percent()-> None:
+
+def test_regex_percent() -> None:
     pattern = "%%%"
     expect = "SELECT * FROM Log WHERE message RLIKE r'%%%' LIMIT MAX SINCE 3 DAYS AGO"
 
@@ -148,7 +165,8 @@ def test_regex_percent()-> None:
 
     assert nrql == expect
 
-def test_regex_single_quote()-> None:
+
+def test_regex_single_quote() -> None:
     pattern = "'''"
     expect = "SELECT * FROM Log WHERE message RLIKE r'\\'\\'\\'' LIMIT MAX SINCE 3 DAYS AGO"
 
@@ -157,8 +175,7 @@ def test_regex_single_quote()-> None:
     assert nrql == expect
 
 
-
-def test_attribute_condition()-> None:
+def test_attribute_condition() -> None:
     pattern = "pat"
     attrs = ["hostname:myhost"]
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='myhost' LIMIT MAX SINCE 3 DAYS AGO"
@@ -167,7 +184,8 @@ def test_attribute_condition()-> None:
 
     assert nrql == expect
 
-def test_attribute_two_conditions()-> None:
+
+def test_attribute_two_conditions() -> None:
     pattern = "pat"
     attrs = ["hostname:myhost", "param:value"]
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='myhost' AND param='value' LIMIT MAX SINCE 3 DAYS AGO"
@@ -176,7 +194,8 @@ def test_attribute_two_conditions()-> None:
 
     assert nrql == expect
 
-def test_attribute_condition_percent()-> None:
+
+def test_attribute_condition_percent() -> None:
     pattern = "pat"
     attrs = ["hostname:%%%"]
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='%%%' LIMIT MAX SINCE 3 DAYS AGO"
@@ -185,7 +204,8 @@ def test_attribute_condition_percent()-> None:
 
     assert nrql == expect
 
-def test_attribute_condition_single_quote()-> None:
+
+def test_attribute_condition_single_quote() -> None:
     pattern = "pat"
     attrs = ["hostname:'''"]
     expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='\\'\\'\\'' LIMIT MAX SINCE 3 DAYS AGO"

@@ -8,7 +8,8 @@ from . import nrgrep
 
 
 def get_opt() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description='grep command for New Relic. Please set env vals, `NR_API_KEY` and `NR_ACCOUNT_ID`.')
+    parser = argparse.ArgumentParser(
+        description='grep command for New Relic. Please set env vals, `NR_API_KEY` and `NR_ACCOUNT_ID`.')
     parser.add_argument("pattern", action="store")
     parser.add_argument("--since", dest="since",
                         type=str, metavar="YYYYmmddHHMMSS",
@@ -42,7 +43,8 @@ def get_opt() -> argparse.Namespace:
 
 def main() -> int:
     args = get_opt()
-    nrgrep.query(args.pattern, args.since, args.until, args.verbose, attributes=args.attributes, conditions=args.conds, regex=args.regex)
+    nrgrep.query(args.pattern, args.since, args.until, args.verbose,
+                 attributes=args.attributes, conditions=args.conds, regex=args.regex)
 
     return 0
 

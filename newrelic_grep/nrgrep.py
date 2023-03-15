@@ -14,15 +14,18 @@ ACCOUNT_ID = os.environ["NR_ACCOUNT_ID"]
 def _escape_like(value: str) -> str:
     return value.replace("'", "\\'").replace("%", "\\%")
 
+
 def _escape(value: str) -> str:
     return value.replace("'", "\\'")
+
 
 def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] = None, conditions: list[str] = [], regex: bool = False) -> str:
     if not since:
         _since = "3 DAYS AGO"
     else:
         since += "20000101000000"[len(since):]
-        _since = datetime.datetime.strptime(since, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
+        _since = datetime.datetime.strptime(
+            since, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
 
     query = "SELECT * FROM Log WHERE message"
     if regex:
@@ -35,7 +38,8 @@ def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] =
     query += f" LIMIT MAX SINCE {_since}"
     if until:
         until += "20000101000000"[len(until):]
-        _until = datetime.datetime.strptime(until, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
+        _until = datetime.datetime.strptime(
+            until, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
         query += f" UNTIL {_until}"
 
     return query
