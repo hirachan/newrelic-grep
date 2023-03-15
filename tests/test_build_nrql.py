@@ -213,3 +213,13 @@ def test_attribute_condition_single_quote() -> None:
     nrql = build_nrql(pattern, conditions=attrs)
 
     assert nrql == expect
+
+
+def test_limit() -> None:
+    pattern = "pat"
+    limit = 41
+    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' LIMIT 41 SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, limit=limit)
+
+    assert nrql == expect

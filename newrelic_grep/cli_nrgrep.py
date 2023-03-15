@@ -31,6 +31,11 @@ def get_opt() -> argparse.Namespace:
                         action="store_true",
                         default=False,
                         help="Use regular expression to pattern.")
+    parser.add_argument("-l", dest="limit",
+                        action="store",
+                        type=int, metavar="LIMIT",
+                        default=0,
+                        help="Attribute to show, you can use this multiple times")
     parser.add_argument("-v", dest="verbose",
                         action="store_true",
                         default=False,
@@ -43,8 +48,16 @@ def get_opt() -> argparse.Namespace:
 
 def main() -> int:
     args = get_opt()
-    nrgrep.query(args.pattern, args.since, args.until, args.verbose,
-                 attributes=args.attributes, conditions=args.conds, regex=args.regex)
+    nrgrep.query(
+        pattern=args.pattern,
+        since=args.since,
+        until=args.until,
+        verbose=args.verbose,
+        attributes=args.attributes,
+        conditions=args.conds,
+        regex=args.regex,
+        limit=args.limit
+    )
 
     return 0
 

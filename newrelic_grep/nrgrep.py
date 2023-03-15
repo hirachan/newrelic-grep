@@ -19,13 +19,21 @@ def _escape(value: str) -> str:
     return value.replace("'", "\\'")
 
 
-def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] = None, conditions: list[str] = [], regex: bool = False) -> str:
+def build_nrql(
+        pattern: str,
+        since: Optional[str] = None, until: Optional[str] = None,
+        conditions: list[str] = [],
+        regex: bool = False,
+        limit: int = 0
+    ) -> str:
     if not since:
         _since = "3 DAYS AGO"
     else:
         since += "20000101000000"[len(since):]
         _since = datetime.datetime.strptime(
             since, "%Y%m%d%H%M%S").strftime("'%Y-%m-%d %H:%M:%S +0900'")
+
+    _limit = "MAX" if limit == 0 else str(limit)
 
     query = "SELECT * FROM Log WHERE message"
     if regex:
@@ -35,7 +43,7 @@ def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] =
     for cond in conditions:
         key, val = cond.split(":")
         query += f" AND {key}='{_escape(val)}'"
-    query += f" LIMIT MAX SINCE {_since}"
+    query += f" LIMIT {_limit} SINCE {_since}"
     if until:
         until += "20000101000000"[len(until):]
         _until = datetime.datetime.strptime(
@@ -45,8 +53,17 @@ def build_nrql(pattern: str, since: Optional[str] = None, until: Optional[str] =
     return query
 
 
-def query(pattern: str, since: Optional[str], until: Optional[str], verbose: bool = False, attributes: list[str] = [], conditions: list[str] = [], regex: bool = False) -> None:
-    query = build_nrql(pattern, since, until, conditions, regex)
+def query(
+        pattern: str,
+        since: Optional[str],
+        until: Optional[str],
+        verbose: bool = False,
+        attributes: list[str] = [],
+        conditions: list[str] = [],
+        regex: bool = False,
+        limit: int = 0
+    ) -> None:
+    query = build_nrql(pattern, since, until, conditions, regex, limit)
 
     params = {
         "query": """
