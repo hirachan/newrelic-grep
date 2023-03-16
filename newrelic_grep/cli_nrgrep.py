@@ -36,10 +36,10 @@ def get_opt() -> argparse.Namespace:
                         type=int, metavar="LIMIT",
                         default=0,
                         help="Attribute to show, you can use this multiple times")
-    parser.add_argument("-v", dest="verbose",
+    parser.add_argument("-d", dest="verbose",
                         action="store_true",
                         default=False,
-                        help="shows hostname, logtype, query")
+                        help="shows query to be sent")
 
     args = parser.parse_args()
 

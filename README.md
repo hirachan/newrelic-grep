@@ -64,5 +64,5 @@ Ex.
 ngrep -q hostname:myhost -q service=api 'Failed to write'
 ```
 
-**-v**
+**-d**
     Show queries to be sent.
