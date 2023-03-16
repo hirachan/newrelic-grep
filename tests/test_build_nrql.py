@@ -271,6 +271,26 @@ def test_attribute_condition_single_quote() -> None:
     assert nrql == expect
 
 
+def test_attribute_condition_double_quote() -> None:
+    pattern = "pat"
+    attrs = ['hostname:"""']
+    expect = '''SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='"""' LIMIT MAX SINCE 3 DAYS AGO'''
+
+    nrql = build_nrql(pattern, conditions=attrs)
+
+    assert nrql == expect
+
+
+def test_attribute_condition_backslash() -> None:
+    pattern = "pat"
+    attrs = ["hostname:\\"]
+    expect = "SELECT * FROM Log WHERE message LIKE '%pat%' AND hostname='\\\\' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, conditions=attrs)
+
+    assert nrql == expect
+
+
 def test_limit() -> None:
     pattern = "pat"
     limit = 41
