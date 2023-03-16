@@ -10,7 +10,7 @@ import requests
 
 URL = "https://api.newrelic.com/graphql"
 API_KEY = os.environ["NR_API_KEY"]
-ACCOUNT_ID = os.environ["NR_ACCOUNT_ID"]
+ACCOUNT_ID = int(os.environ["NR_ACCOUNT_ID"])
 
 
 def _escape_like(value: str) -> str:
@@ -85,26 +85,34 @@ def query(
         regex: bool = False,
         limit: int = 0
     ) -> None:
-    query = build_nrql(pattern, since, until, conditions, regex, limit)
+    nrql = build_nrql(pattern, since, until, conditions, regex, limit)
 
     params = {
         "query": """
-            {
+            query Query($id: Int!, $nrql: Nrql!) {
               actor {
-                account(id: %s) {
-                  nrql(query: "%s", timeout: 120) {
+                account(id: $id) {
+                  nrql(query: $nrql, timeout: 120) {
                     results
                   }
                 }
               }
             }
-        """ % (ACCOUNT_ID, query)
+        """,
+        "variables": {
+            "nrql": nrql,
+            "id": ACCOUNT_ID,
+        },
+        "operationName": "Query"
     }
 
     if verbose:
-        sys.stderr.write(f"NRQL: {query}\n")
+        sys.stderr.write(f"NRQL: {nrql}\n")
         sys.stderr.write("GraphQL:")
         sys.stderr.write(params["query"])
+        sys.stderr.write("\n")
+        sys.stderr.write("variables:\n")
+        sys.stderr.write(json.dumps(params["variables"], ensure_ascii=False, indent=2))
         sys.stderr.write("\n")
 
     headers = {
@@ -116,7 +124,8 @@ def query(
 
     res = r.json()
 
-    if not res["data"]["actor"]["account"]["nrql"]:
+    # if not res["data"]["actor"]["account"]["nrql"]:
+    if "errors" in res:
         sys.stderr.write("\n".join([_["message"] for _ in res["errors"]]))
         sys.stderr.write("\n")
         sys.exit(2)
