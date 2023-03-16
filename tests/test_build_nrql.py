@@ -30,6 +30,24 @@ def test_single_quote() -> None:
     assert nrql == expect
 
 
+def test_double_quote() -> None:
+    pattern = '"""'
+    expect = '''SELECT * FROM Log WHERE message LIKE '%"""%' LIMIT MAX SINCE 3 DAYS AGO'''
+
+    nrql = build_nrql(pattern, None, None)
+
+    assert nrql == expect
+
+
+def test_backslash() -> None:
+    pattern = "\\"
+    expect = "SELECT * FROM Log WHERE message LIKE '%\\\\%' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, None, None)
+
+    assert nrql == expect
+
+
 def test_since_full() -> None:
     pattern = "pat"
     since = "20230315123456"
@@ -177,7 +195,25 @@ def test_regex_single_quote() -> None:
     assert nrql == expect
 
 
-def test_regex_single_start() -> None:
+def test_regex_double_quote() -> None:
+    pattern = '"""'
+    expect = '''SELECT * FROM Log WHERE message RLIKE r'.*""".*' LIMIT MAX SINCE 3 DAYS AGO'''
+
+    nrql = build_nrql(pattern, regex=True)
+
+    assert nrql == expect
+
+
+def test_regex_backslash() -> None:
+    pattern = "\\"
+    expect = "SELECT * FROM Log WHERE message RLIKE r'.*\\\\.*' LIMIT MAX SINCE 3 DAYS AGO"
+
+    nrql = build_nrql(pattern, regex=True)
+
+    assert nrql == expect
+
+
+def test_regex_start() -> None:
     pattern = "^pat"
     expect = "SELECT * FROM Log WHERE message RLIKE r'^pat.*' LIMIT MAX SINCE 3 DAYS AGO"
 
@@ -186,7 +222,7 @@ def test_regex_single_start() -> None:
     assert nrql == expect
 
 
-def test_regex_single_end() -> None:
+def test_regex_end() -> None:
     pattern = "pat$"
     expect = "SELECT * FROM Log WHERE message RLIKE r'.*pat$' LIMIT MAX SINCE 3 DAYS AGO"
 

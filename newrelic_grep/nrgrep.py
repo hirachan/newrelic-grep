@@ -14,11 +14,11 @@ ACCOUNT_ID = int(os.environ["NR_ACCOUNT_ID"])
 
 
 def _escape_like(value: str) -> str:
-    return value.replace("'", "\\'").replace("%", "\\%")
+    return value.replace("\\", "\\\\").replace("'", "\\'").replace("%", "\\%")
 
 
 def _escape(value: str) -> str:
-    return value.replace("'", "\\'")
+    return value.replace("\\", "\\\\").replace("'", "\\'")
 
 
 def get_timezone() -> str:
